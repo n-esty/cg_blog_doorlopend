@@ -1,0 +1,33 @@
+body{ font: 14px sans-serif; }
+.wrapper{ width: 800px; padding: 20px;margin-left:auto;margin-right:auto; }
+table td th{padding:5px}
+table {width:100%}
+table td {width:33%}
+.header{ width: 100%;height:85px;background-color:#5758BB; padding: 0px;margin-left:auto;margin-right:auto; }
+
+.ck-editor__editable {
+    min-height: 400px;
+}
+
+.form-boep {
+	width:200px;
+	float:left;
+	padding-right:20px;
+	padding-top:10px;
+}
+
+.login {
+	padding:0;
+	margin:0;
+	float:right;
+}
+.users{
+	padding:0;
+	margin:0;
+	float:left;
+}
+.header_cont {
+    max-width:800px;
+    margin-left:auto;
+    margin-right:auto;
+}
