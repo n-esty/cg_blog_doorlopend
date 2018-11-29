@@ -170,4 +170,22 @@ function loginCheck($perm, $out, $info){
         exit;
     }
 }
+
+function adminList($link, $table, $col) {
+            $list = mysqli_query($link,"SELECT * FROM $table");
+            echo "<table>";
+            while($row = mysqli_fetch_array($list)) {   
+            $id = $row['id'];
+            echo "<tr >
+            <td style='width:calc(100% - 80px );padding-left:5%;background-color:#757575'>
+            $row[$col]
+            </td>
+            <td style='width:80px'><button onclick='confirmDel(\"delete$col.php?id=$id\")' class='simplebutton' style='margin:0;padding:5px;'>&#9940;</a> </td>
+            </tr>";
+            
+            }
+            
+            echo "</table>";
+    
+}
 ?>

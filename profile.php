@@ -34,7 +34,6 @@
 <html>
     <head>
         <link rel="stylesheet" href="style.css">
-        <script>var id = <?php echo $user_id ?> </script>
         <script src="js.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     </head>
@@ -48,7 +47,7 @@
                 <p>$c_at</p>";
                 if($admin){
                     echo "<br><br><br>
-                    <a class=\"btn btn-danger\" onclick='deleteUsr()'>DELETE USER</a>
+                    <a class=\"btn btn-danger\" onclick='confirmDel(\"deleteusername.php?id=$user_id\")'>DELETE USER</a>
                     &nbsp;&nbsp;
                     <a class=\"btn btn-default\" href='edituser.php?id=$user_id'>EDIT USER</a>";
                 }
