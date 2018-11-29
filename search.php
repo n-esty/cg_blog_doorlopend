@@ -18,11 +18,7 @@
             <h2>Search:</h2>
             <form action="results.php" method="GET">
                 <div class="form-group">
-                    <input type="text" name="query" class="form-control" placeholder="Doorzoek hier blog titels of inhoud">
-                </div>
-                 <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Zoek">
-                </div>
+                    <input type="text" name="query" class="form-control" placeholder="Doorzoek hier blog titels of inhoud" style="padding-right:85px;float:left"><input type="submit" class="simplebutton" value="Search">
             </form>
         </div>
     </body>

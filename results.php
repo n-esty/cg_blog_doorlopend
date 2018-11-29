@@ -12,7 +12,7 @@
     <body>
         <?php include 'header.php' ?>
         <div class="wrapper">
-            <a class="btn btn-primary" href="search.php">&#11207; Terug naar zoeken</a>
+            <a class="btn btn-primary" href="articles.php">&#11207; Terug naar blog overzicht</a>
             <h1> Resultaten: </h1>
                 <?php
                     printResults($link, orderBy());
