@@ -11,14 +11,20 @@
     // Include config file
     require_once "config.php";
      
+    $categories = [];
+    $cats = mysqli_query($link,"SELECT * FROM categories");
+        while($ct = mysqli_fetch_array($cats)){
+            array_push($categories, $ct['category']);
+        };
+    
     // Define variables and initialize with empty values
     $author = $title = $body = "";
-    $author_err = $title_err = $body_err = "";
+    $author_err = $title_err = $body_err = $cat_err = "";
     $captcha_err = "&nbsp;";
      
     // Processing form data when form is submitted
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-     
+        $cat_submitted = explode("," ,$_POST["catRes"]);
         $author = $_SESSION["id"];    
             
         // Validate title
@@ -95,17 +101,41 @@
                 // Attempt to execute the prepared statement
                 if(mysqli_stmt_execute($stmt)){
                     // Redirect to login page
-                    header("location: articles.php");
+                   // header("location: articles.php");
                 } else{
                     echo "Something went wrong. Please try again later.";
                 }
             }
-             
+            $last_id = mysqli_insert_id($link);
             // Close statement
             mysqli_stmt_close($stmt);
-        } else {
+       
+       // Check input errors before inserting in database
+        if(!empty($cat_submitted)){
+            
+            // Prepare an insert statement
+            $sql = "INSERT INTO articles_categories (article_id, category_id) VALUES (?, ?)";
+             
+            if($stmt = mysqli_prepare($link, $sql)){
+                // Bind variables to the prepared statement as parameters
+                mysqli_stmt_bind_param($stmt, "ss", $param_article_id, $param_category);
+                
+                // Set parameters
+                $param_article_id = $last_id;
+                for($i=0;$i<count($cat_submitted);$i++){
+                    $cat_sql = $cat_submitted[$i];
+                    $cat_query = mysqli_query($link,"SELECT * FROM categories WHERE category='$cat_sql'");
+                    $ctq = mysqli_fetch_array($cat_query);
+                    $param_category = $ctq['id'];
+                    mysqli_stmt_execute($stmt);
+                }
+                mysqli_stmt_close($stmt);
+            }
+        }
+         } else {
             $captcha_err = "Fout met de RECAPTCHA, probeer opnieuw (Zorg dat JS aan staat)";
         }
+        
         
         // Close connection
         mysqli_close($link);
@@ -113,10 +143,16 @@
 ?>
 <html>
     <head>
+    <script>
+            <?php
+            $js_array = json_encode($categories);
+            echo "var categories = ". $js_array . ";\n";
+            ?>
+    </script>
         <meta charset="UTF-8">
         <title>Maak post</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">    
+       <link rel="stylesheet" href="style.css">
         <script src='https://www.google.com/recaptcha/api.js'></script>
     </head>
     <body>
@@ -136,6 +172,16 @@
                     <textarea type="textarea" id="editor" name="body" class="form-control" rows="10" value=""><?php echo $body; ?></textarea>
                     <span class="help-block"><?php echo $body_err; ?></span>
                 </div>
+                <div class="form-group">
+                    <label>Voeg categorieën toe</label>
+                    <div id="categories" style="margin-bottom:20px;margin-left:-5px;"></div>
+                    <div id="error" style="clear:both"></div>
+                    <input type="text" class="form-control" id="catInput"  style="padding-right:85px;float:left;" oninput="inputUpdate()">
+                    <button id="submitButton" class="simplebutton" onclick="voegToe()" style="float:left" disabled>Voeg toe</button>
+                    
+                    <input type="text" id="result" name="catRes" style="display:none">
+                    <p><br/><br/><br/></p>
+                </div>  
                 <div class="form-group <?php echo (!empty($captcha_err)) ? 'has-error' : ''; ?>">
                     <div class="g-recaptcha" data-sitekey="6LdmAHsUAAAAAB18I9OpYMBiynNtI_6kcJqlwckw"></div>
                     <span class="help-block" style=""><?php echo $captcha_err; ?></span>
@@ -146,6 +192,7 @@
             </form>
         </div>
         <script src="ckeditor.js"></script>
+        <script src="js.js"></script>
         <script>
             ClassicEditor
                 .create( document.querySelector( '#editor' ) )
