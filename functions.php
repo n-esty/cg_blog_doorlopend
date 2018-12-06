@@ -95,6 +95,40 @@ function printArticles($link, $order_by) {
     echo "</table>";
 }
 
+function printComments($link) {
+    $id = intval($_GET['id']);
+    if (is_int($id)){
+
+    $comments = mysqli_query($link,"SELECT * FROM comments WHERE article_id='$id' ORDER BY created_at DESC");
+    echo "<br/><br/><table border='1'>
+        <tr>
+        <th style='padding:10px'>auteur</th>
+        <th style='padding:10px'>body</th>
+        <th style='padding:10px'>post date</th>
+        </tr>
+        ";
+    
+    while($row = mysqli_fetch_array($comments)){    
+
+        $user_id = $row['user_id'];
+        $users = mysqli_query($link,"SELECT * FROM users WHERE id='$user_id'");
+        $user_info = mysqli_fetch_array($users);
+        if ($row['anonymous']){
+            $username = "Anonymous user";
+        } else {
+            $username = $user_info['username'];
+        };
+        echo "<tr>
+        <td style='padding:10px'>" . $username . "</td>
+        <td style='padding:10px'>" . nl2br($row['body']) . " </td>
+        <td style='padding:10px'>" . $row['created_at'] . "</td>
+        </tr>";
+    }
+    echo "</table>";
+   }
+}
+
+
 function printUsers($link, $order_by) {
     extract($order_by);
     $users = mysqli_query($link,"SELECT * FROM users ORDER BY $order_col $order_dir");
