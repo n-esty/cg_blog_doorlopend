@@ -70,8 +70,12 @@ function timeSincePosted($post_date, $current_date) {
 }
 
 function printArticles($link, $order_by) {
+    $where = "";
+    if(isset($_GET['user'])){
+        $where = "WHERE author=" . $_GET['user'];
+    }
     extract($order_by);
-    $articles = mysqli_query($link,"SELECT * FROM articles ORDER BY $order_col $order_dir");
+    $articles = mysqli_query($link,"SELECT * FROM articles $where ORDER BY $order_col $order_dir");
     echo "<table border='1'>
         <tr>
         <th style='padding:10px'><a href='?by=author&order=$click_order'>auteur $aut_sort</a></th>
@@ -95,6 +99,42 @@ function printArticles($link, $order_by) {
     echo "</table>";
 }
 
+function printArticles2($link, $order_by) {
+    $where = "";
+    $category = "";
+    
+    if(isset($_GET['user'])){
+        $where = "WHERE author=" . $_GET['user'];
+    }
+    if(isset($_GET['category'])){
+        $where = "LEFT JOIN articles_categories ON articles.id=articles_categories.article_id WHERE category_id=" . $_GET['category'];
+    }
+    extract($order_by);
+    $articles = mysqli_query($link,"SELECT * FROM articles $where ORDER BY $order_col $order_dir");
+   echo "<table border='1'>
+        <tr>
+        <th style='padding:10px'><a href='?by=author&order=$click_order'>auteur $aut_sort</a></th>
+        <th style='padding:10px'>titel</th>
+        <th style='padding:10px'><a href='?order=$click_order'>tijd sinds gepost $date_sort</a></th>
+        </tr>
+        ";
+    
+    while($row = mysqli_fetch_array($articles)){    
+       $post_date = new DateTime($row['created_at']);
+        $current_date = new DateTime(date('Y-m-d H:i:s'));
+        $user_id = $row['author'];
+        $users = mysqli_query($link,"SELECT * FROM users WHERE id='$user_id'");
+        $user_info = mysqli_fetch_array($users);
+        echo "<tr>
+        <td style='padding:10px'>" . $user_info['username'] . "</td>
+        <td style='padding:10px'><a href='article.php?id=" . $row['id'] . "'>" . $row['title'] . "</a></td>
+        <td style='padding:10px'>" . timeSincePosted($post_date,$current_date) . "</td>
+        </tr>";
+    }
+    echo "</table>";
+
+}
+
 function printComments($link) {
     $id = intval($_GET['id']);
     if (is_int($id)){
@@ -105,6 +145,7 @@ function printComments($link) {
         <th style='padding:10px'>auteur</th>
         <th style='padding:10px'>body</th>
         <th style='padding:10px'>post date</th>
+         <th style='padding:10px'>action</th>
         </tr>
         ";
     
@@ -113,6 +154,7 @@ function printComments($link) {
         $user_id = $row['user_id'];
         $users = mysqli_query($link,"SELECT * FROM users WHERE id='$user_id'");
         $user_info = mysqli_fetch_array($users);
+        $id = $row['id'];
         if ($row['anonymous']){
             $username = "Anonymous user";
         } else {
@@ -122,6 +164,7 @@ function printComments($link) {
         <td style='padding:10px'>" . $username . "</td>
         <td style='padding:10px'>" . nl2br($row['body']) . " </td>
         <td style='padding:10px'>" . $row['created_at'] . "</td>
+        <td style='padding:10px'><button onclick='confirmDel(\"deletecomment.php?id=$id\")' class='simplebutton' style='margin:0;padding:5px;'>&#9940;</a> </td>
         </tr>";
     }
     echo "</table>";

@@ -2,6 +2,7 @@
     // Initialize the session
     session_start();
     require_once "config.php";
+    require_once "functions.php";
     $admin = false;
     $user_id = $_SESSION["id"];
     if (isset($_GET['user'])){
@@ -50,8 +51,10 @@
                     <a class=\"btn btn-danger\" onclick='confirmDel(\"deleteusername.php?id=$user_id\")'>DELETE USER</a>
                     &nbsp;&nbsp;
                     <a class=\"btn btn-default\" href='edituser.php?id=$user_id'>EDIT USER</a>";
-                }
+                };
             ?>
+            <br><br><div style='height:10px;width:100%;background-color:grey'></div>
+            <?php printArticles($link, orderBy()); ?>
         </div>
     </body>
 </html>

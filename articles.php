@@ -23,7 +23,7 @@
             </div>
             <h1> Articles: </h1>
             <?php 
-                printArticles($link, orderBy());
+                printArticles2($link, orderBy());
             ?>
         </div>
     </body>
