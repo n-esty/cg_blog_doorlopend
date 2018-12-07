@@ -16,6 +16,12 @@
         while($ct = mysqli_fetch_array($cats)){
             array_push($categories, $ct['category']);
         };
+        
+    $shorthands = [];
+    $shs = mysqli_query($link,"SELECT * FROM shorthands");
+        while($sh = mysqli_fetch_array($shs)){
+            $shorthands[$sh['short']] = $sh['full'];
+    };
     
     // Define variables and initialize with empty values
     $author = $title = $body = "";
@@ -147,6 +153,8 @@
             <?php
             $js_array = json_encode($categories);
             echo "var categories = ". $js_array . ";\n";
+            $js_array = json_encode($shorthands);
+            echo "var shorthands = ". $js_array . ";\n";
             ?>
     </script>
         <meta charset="UTF-8">
@@ -194,11 +202,11 @@
         <script src="ckeditor.js"></script>
         <script src="js.js"></script>
         <script>
-            ClassicEditor
-                .create( document.querySelector( '#editor' ) )
-                .catch( error => {
-                    console.error( error );
-                } );
+           // ClassicEditor
+            //    .create( document.querySelector( '#editor' ) )
+            //    .catch( error => {
+           //         console.error( error );
+            //    } );
              
         </script>    
     </body>

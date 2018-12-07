@@ -41,6 +41,27 @@ function filter_array(test_array) {
     return result;
 }
 
+
+
+var shInput = document.getElementById("editor");
+shInput.addEventListener("keydown", function(e) {
+	if (e.keyCode === 32 || e.keyCode === 13 || e.keyCode === 188 || e.keyCode === 190 || e.keyCode === 186 || e.keyCode === 49 || e.keyCode === 191) {
+		shortHand();
+        
+	}
+});
+
+function shortHand() {
+var input = document.getElementById("editor").value;
+var words = input.split(' ');
+if (shorthands[words[words.length-1]]) {
+words[words.length-1] = shorthands[words[words.length-1]];
+}
+document.getElementById("editor").value = words.join(" ");
+}
+
+
+
 var submitted = [];
 var c = 0;
 
