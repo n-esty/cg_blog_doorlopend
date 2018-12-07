@@ -1,3 +1,8 @@
+#Disclaimer
+Alles werkt maar zit met plakband aan elkaar, veel pagina's zoals delete pagina's zijn veel vaak gebruikte code blocken, die nog samengevoegd moeten worden. Ook hoe alle functionaliteit weergeven wordt (layout, design etc) is nog niet gedaan. Eerst volgende kans die ik heb gaat de code op de schop, nog meer code naar functions.php en komt er een betere layout voor alle functionaliteit.
+
+Voorbeeld van werkende code (niet alle functionaliteit is hier te zien, geen admin panel etc): https://www.youtube.com/watch?v=WgsYfZ_sPRk
+
 # Week 4
 Categories adding in js
 
