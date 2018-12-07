@@ -48,6 +48,10 @@
     $captcha_err = "&nbsp;";
     
     if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $anonymous = 0;
+        if(isset($_POST['anonymous'])){
+            $anonymous = 1;
+        }
         $article_id = htmlspecialchars($_GET["id"]);
         $user_id = $_SESSION["id"];    
             
@@ -97,16 +101,17 @@
         // Check input errors before inserting in database
         if(empty($cbody_err) && empty($captcha_err)){
             // Prepare an insert statement
-            $sql = "INSERT INTO comments (user_id, article_id, body) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO comments (user_id, article_id, anonymous, body) VALUES (?, ?, ?, ?)";
              
             if($stmt = mysqli_prepare($link, $sql)){
                 // Bind variables to the prepared statement as parameters
-                mysqli_stmt_bind_param($stmt, "sss", $param_user, $param_article, $param_body);
+                mysqli_stmt_bind_param($stmt, "ssss", $param_user, $param_article, $param_anon, $param_body);
                 
                 // Set parameters
                 $param_user = $user_id;
                 $param_article = $article_id;
                 $param_body = $cbody;
+                $param_anon = $anonymous;
                 
                 // Attempt to execute the prepared statement
                 if(mysqli_stmt_execute($stmt)){
@@ -159,6 +164,9 @@
                     <label><br>Plaats comment:</label>
                     <textarea type="textarea" id="editor" name="cbody" class="form-control" rows="10" value="">' . $cbody . '</textarea>
                    <span class="help-block">' . $cbody_err . '</span>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="anonymous" value="anonymous">Plaats anoniem<br>
                 </div>
                                 <div class="form-group">
                     <div class="g-recaptcha" data-sitekey="6LdmAHsUAAAAAB18I9OpYMBiynNtI_6kcJqlwckw"></div>
