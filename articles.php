@@ -20,11 +20,18 @@
                     <input type="text" name="query" class="form-control" placeholder="Doorzoek hier blog titels of inhoud" style="padding-right:85px;float:left"><input type="submit" class="simplebutton" value=" &#128269; Zoek">
                 </div>
             </form>
+            
             </div>
+
             <h1> Articles: </h1>
             <?php 
-                printArticles2($link, orderBy());
+                printArticles($link, orderBy());
             ?>
+            <h1>Categories</h1>
+                        <?php 
+                catList($link);
+            ?>
+            
         </div>
     </body>
 </html>

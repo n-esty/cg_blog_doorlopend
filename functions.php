@@ -71,36 +71,6 @@ function timeSincePosted($post_date, $current_date) {
 
 function printArticles($link, $order_by) {
     $where = "";
-    if(isset($_GET['user'])){
-        $where = "WHERE author=" . $_GET['user'];
-    }
-    extract($order_by);
-    $articles = mysqli_query($link,"SELECT * FROM articles $where ORDER BY $order_col $order_dir");
-    echo "<table border='1'>
-        <tr>
-        <th style='padding:10px'><a href='?by=author&order=$click_order'>auteur $aut_sort</a></th>
-        <th style='padding:10px'>titel</th>
-        <th style='padding:10px'><a href='?order=$click_order'>tijd sinds gepost $date_sort</a></th>
-        </tr>
-        ";
-    
-    while($row = mysqli_fetch_array($articles)){    
-        $post_date = new DateTime($row['created_at']);
-        $current_date = new DateTime(date('Y-m-d H:i:s'));
-        $user_id = $row['author'];
-        $users = mysqli_query($link,"SELECT * FROM users WHERE id='$user_id'");
-        $user_info = mysqli_fetch_array($users);
-        echo "<tr>
-        <td style='padding:10px'>" . $user_info['username'] . "</td>
-        <td style='padding:10px'><a href='article.php?id=" . $row['id'] . "'>" . $row['title'] . "</a></td>
-        <td style='padding:10px'>" . timeSincePosted($post_date,$current_date) . "</td>
-        </tr>";
-    }
-    echo "</table>";
-}
-
-function printArticles2($link, $order_by) {
-    $where = "";
     $category = "";
     
     if(isset($_GET['user'])){
@@ -258,6 +228,24 @@ function adminList($link, $table, $col) {
             $row[$col]
             </td>
             <td style='width:80px'><button onclick='confirmDel(\"delete$col.php?id=$id\")' class='simplebutton' style='margin:0;padding:5px;'>&#9940;</a> </td>
+            </tr>";
+            
+            }
+            
+            echo "</table>";
+    
+}
+function catList($link) {
+            $list = mysqli_query($link,"SELECT * FROM categories");
+            echo "<table>";
+            while($row = mysqli_fetch_array($list)) {   
+            $id = $row['id'];
+            $cat = $row['category'];
+            echo "<tr >
+            <td>
+            $cat
+            </td>
+            <td style='width:80px'><button onclick='location.href=\"articles.php?category=$id\"' class='simplebutton' style='margin:0;padding:5px;'>&#128269;</a> </td>
             </tr>";
             
             }
